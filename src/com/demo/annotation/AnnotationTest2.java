@@ -4,16 +4,21 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class AnnotationTest {
+/**
+ * 动态创建类，并且获取annotation，更加通用灵活
+ * @author Administrator
+ *
+ */
+public class AnnotationTest2 {
     public static void main(String[] args) throws Exception {
-        Person person = new Person();
-        Class<Person> personClass = Person.class;
+    	Class<?> personClass = Class.forName("com.demo.annotation.Person");
+    	Object object = personClass.newInstance();
         Method somebodyMethod = personClass.getMethod("somebody", new Class[]{String.class, int.class});
-        somebodyMethod.invoke(person, new Object[]{"lily", 18});
+        somebodyMethod.invoke(object, new Object[]{"lily", 18});
         iteratorAnnotations(somebodyMethod);
 
         Method emptyMethod = personClass.getMethod("empty", new Class[]{});
-        emptyMethod.invoke(person, new Object[]{});
+        emptyMethod.invoke(object, new Object[]{});
         iteratorAnnotations(emptyMethod);
     }
     
