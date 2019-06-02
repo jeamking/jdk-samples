@@ -13,8 +13,8 @@ public class DeployPluginJob extends AbstractJob {
 
 	@Override
 	public void execute(Integer normalJobId) {
-		String clsName = "DeployPluginJob,";
-		System.out.println("DeployPluginJob.execute");
+		String logKey = "JobThreadMain.JobThread.DeployPluginJob.execute(),线程" + normalJobId;
+		System.out.println(logKey + "进入");
 		ExecutorService executor = Executors.newFixedThreadPool(2);
 		List<Future<Void>> futureList = new ArrayList<Future<Void>>();
 		for (int i=1; i<=5; i++) {
@@ -23,28 +23,26 @@ public class DeployPluginJob extends AbstractJob {
 			futureList.add(future);
 		}
 		futureListMap.put(normalJobId, futureList);
-		System.out.println(clsName + "afger get");
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(clsName + "cancel");
 		executor.shutdown();//没有调用shutdown方法，main方法不会结束
-		System.out.println(clsName + "afger shutdown");		
+		System.out.println(logKey + ",结束,after shutdown");		
 	}
 
 	@Override
 	public void destroy(Integer normalJobId) {
 		List<Future<Void>> futureList = futureListMap.get(normalJobId);
 		if (futureList != null) {
-			String logKey = "destroy,父线程" + normalJobId + ",子线程";
+			String logKey = "JobThreadMain.JobThread.DeployPluginJob.destroy(),父线程" + normalJobId + ",子线程";
 			for (int i=1; i<=futureList.size(); i++) {
 				Future<Void> future = futureList.get(i-1);
 				if (future.isDone()) {
-					System.out.println(logKey + i + ",is done:");
+					System.out.println(logKey + i + ",is 【done】:");
 				} else {
-					System.out.println(logKey + i + ",cancel result:"+future.cancel(true));				
+					System.out.println(logKey + i + ",【cancel】 result:"+future.cancel(true));				
 				}
 			}			
 		}
