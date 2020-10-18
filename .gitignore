@@ -1,10 +1,9 @@
 target
+bin
 
 # Compiled class file
 *.class
 
-.classpath
-.project
 .settings
 
 # Log file
